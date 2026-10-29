@@ -1,0 +1,17 @@
+/config.json
+/.runtime/
+/memory/
+/artifacts/
+/uploads/
+/runs/
+/staging/
+/evidence/
+/backups/
+/threads/
+/board.md
+/events.jsonl
+*.png
+*.log
+node_modules/
+__pycache__/
+*.pyc

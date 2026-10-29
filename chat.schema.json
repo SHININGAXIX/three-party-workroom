@@ -1,0 +1,9 @@
+{
+  "type":"object","additionalProperties":false,
+  "required":["reply","ack","files"],
+  "properties":{
+    "reply":{"type":"string"},
+    "ack":{"type":"object","additionalProperties":false,"required":["seen_seq","memory_revision"],"properties":{"seen_seq":{"type":"integer"},"memory_revision":{"type":"integer"}}},
+    "files":{"type":"array","items":{"type":"object","additionalProperties":false,"required":["path","content"],"properties":{"path":{"type":"string"},"content":{"type":"string"}}}}
+  }
+}

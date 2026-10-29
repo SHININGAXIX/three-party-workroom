@@ -1,0 +1,12 @@
+{
+  "type":"object",
+  "additionalProperties":false,
+  "required":["summary","evidence","limitations","next_step","files"],
+  "properties":{
+    "summary":{"type":"string"},
+    "evidence":{"type":"array","items":{"type":"string"}},
+    "limitations":{"type":"string"},
+    "next_step":{"type":"string"},
+    "files":{"type":"array","items":{"type":"object","additionalProperties":false,"required":["path","content"],"properties":{"path":{"type":"string"},"content":{"type":"string"}}}}
+  }
+}

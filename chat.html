@@ -1,0 +1,173 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>共同工作间</title><style>
+:root{font-family:"Microsoft YaHei",system-ui,sans-serif;color:#18263a;background:#f4f6fa;font-size:15px}*{box-sizing:border-box}body{margin:0}header{padding:22px 32px;background:#162a46;color:white;display:flex;align-items:center;gap:24px}header h1{font-size:23px;margin:0}header p{font-size:13px;color:#c8d3e3;margin:5px 0 0}button,select{font:inherit;cursor:pointer}button{border:1px solid #cfdae8;border-radius:8px;padding:9px 15px;background:white;color:#1e395e}button.primary{background:#275dc7;color:white;border-color:#275dc7}button.danger{color:#ae2439;border-color:#dba4ad}button:disabled{opacity:.5;cursor:default}main{display:grid;grid-template-columns:minmax(0,1fr) 340px;max-width:1500px;margin:0 auto;height:calc(100vh - 89px)}.chat{display:flex;flex-direction:column;min-height:0;padding:20px 26px}.toolbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;padding-bottom:12px}.toolbar span{flex:1;font-size:13px;color:#56667d}#messages{flex:1;overflow:auto;min-height:100px;padding:5px 12px 20px 0}.message{border:1px solid #dce3ec;background:white;border-radius:12px;margin:12px 0;padding:15px 18px;max-width:94%}.message.human{margin-left:auto;background:#eaf2ff;border-color:#ccdffa}.message.system{font-size:13px;background:#fff5e9}.message.ds{border-left:4px solid #06a88b}.message.codex{border-left:4px solid #425cd5}.meta{font-size:12px;color:#68788d;display:flex;gap:10px;align-items:center;flex-wrap:wrap}.name{font-weight:700;color:#223b5c;font-size:14px}.body{white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.75;margin-top:9px}.ack{color:#237c62}.pin{font-size:11px;padding:3px 7px;margin-left:auto}.composer{padding-top:12px;border-top:1px solid #d7dfeb}textarea{font:inherit;width:100%;resize:vertical;min-height:82px;max-height:250px;padding:12px;border:1px solid #bccbdd;border-radius:10px;line-height:1.6}.actions{display:flex;gap:9px;align-items:center;margin-top:9px;flex-wrap:wrap}select{padding:8px;border:1px solid #c7d3e2;border-radius:7px;background:white}#feedback{font-size:12px;color:#905b14;min-height:20px;margin-top:5px}aside{border-left:1px solid #dce3ed;background:#edf1f7;padding:20px;overflow:auto}aside h2{font-size:17px;margin:0 0 10px}aside p,aside li{font-size:13px;line-height:1.65}aside ol{padding-left:21px}aside li{padding:7px 0}details{font-size:12px;margin:14px 0;color:#53667f}details pre{white-space:pre-wrap;overflow-wrap:anywhere;font:12px/1.6 system-ui}.status{color:#14644f}.badge{background:#dce6f8;border-radius:5px;padding:2px 6px;font-size:12px}.note{font-size:12px;color:#61718a;line-height:1.7}a{color:#275dc7}dialog{border:1px solid #ccd7e7;border-radius:12px;width:min(600px,90vw);padding:24px}dialog::backdrop{background:#152b4366}dialog h2{font-size:18px;margin-top:0}dialog textarea{height:150px}#history{font-size:12px;padding:4px 9px}@media(max-width:900px){main{grid-template-columns:1fr;height:auto}.chat{height:85vh}aside{border:0}header{padding:18px}.chat{padding:14px}.message{max-width:100%}}
+</style><style>
+header{flex-wrap:wrap}#openFiles{margin-left:auto}#pendingFiles{display:flex;gap:7px;flex-wrap:wrap;margin-top:8px}#pendingFiles:empty{display:none}.file-chip{display:flex;align-items:center;gap:7px;max-width:100%;background:#eaf1fb;border:1px solid #ccd9ea;border-radius:8px;padding:6px 9px}.file-chip span{font-size:12px;overflow-wrap:anywhere}.file-chip button{flex:none;font-size:12px;padding:2px 6px}.upload-note{margin:7px 0 0}.file-dialog{width:min(880px,94vw);max-height:88vh;overflow:auto}.dialog-heading{display:flex;align-items:center;justify-content:space-between;gap:12px}.dialog-heading h2{margin:0}.file-dialog h3{font-size:16px;margin:22px 0 10px}.file-list{display:grid;gap:10px}.file-row{border:1px solid #dce3ec;border-radius:9px;padding:12px;background:#f8faff}.file-name{font-weight:600;overflow-wrap:anywhere}.file-detail{font-size:12px;color:#56667d;line-height:1.6;margin-top:5px;overflow-wrap:anywhere}.file-actions{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:9px}.file-actions button{font-size:12px;padding:5px 10px}.file-actions a{font-size:13px}.file-empty{font-size:13px;color:#61718a;padding:12px 0}.file-warning{color:#8b5f16}.message-attachment{font-size:13px;background:#eef3fa;border-radius:6px;padding:7px 10px;margin:9px 0 0;overflow-wrap:anywhere}#uploadStatus{min-height:18px;color:#56667d}#filesFeedback{min-height:20px}.file-close{padding:6px 11px}
+.run-status{display:flex;gap:12px;align-items:flex-start;border:1px solid #c7d8f5;background:#edf4ff;border-radius:10px;padding:12px 15px;margin-top:6px;flex-shrink:0}.run-mark{width:18px;height:18px;margin-top:2px;flex-shrink:0;border:2px solid #a9c3ef;border-top-color:#315fc8;border-radius:50%}.run-status[data-live="true"] .run-mark{animation:room-spin 1s linear infinite}.run-status[data-kind="complete"]{background:#edf8f2;border-color:#c4e0d0}.run-status[data-kind="complete"] .run-mark{border-color:#368061;background:#368061}.run-status[data-kind="offline"],.run-status[data-kind="uncertain"],.run-status[data-kind="failed"]{background:#fff6e9;border-color:#e7c99c}.run-status[data-kind="offline"] .run-mark,.run-status[data-kind="uncertain"] .run-mark,.run-status[data-kind="failed"] .run-mark{border-color:#b9842f}.run-title{font-size:14px;font-weight:600;color:#223d66}.run-detail{font-size:12px;color:#5b6d86;line-height:1.6;margin-top:4px}.run-elapsed{font-size:13px;color:#2a508b;font-variant-numeric:tabular-nums;margin-top:5px}.run-elapsed:empty{display:none}@keyframes room-spin{to{transform:rotate(360deg)}}@media(prefers-reduced-motion:reduce){.run-status[data-live="true"] .run-mark{animation:none}}
+.message.collapsed{width:min(94%,920px)}.message.collapsed .body{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;max-height:3.5em;color:#53667f}.message.collapsed .message-detail{display:none}.collapse-toggle{font-size:12px;padding:3px 8px;margin-left:auto;white-space:nowrap}.meta .collapse-toggle+.pin{margin-left:0}@media(max-width:900px){.message.collapsed{width:100%}}
+.history-search{display:flex;align-items:center;gap:9px;flex-wrap:wrap;padding:0 0 12px}.history-search label{font-size:13px;color:#42536d}.history-search input{font:inherit;min-width:180px;flex:1;padding:8px 10px;border:1px solid #c7d3e2;border-radius:7px}.history-search button{padding:8px 11px}.history-search .count{font-size:12px;color:#56667d}.search-empty{padding:28px 12px;color:#56667d;text-align:center}mark{background:#fff0a8;color:inherit;border-radius:2px;padding:0 1px}
+</style></head><body><header><div><h1>你 · DS · Codex</h1><p>固定会话，持续讨论，共同记录</p></div><span class="badge" id="roomName">正在连接</span><button id="openFiles" aria-haspopup="dialog" aria-controls="filesDialog">文件区 · 上传与下载</button></header><main><section class="chat"><div class="toolbar"><span id="status">读取共同记录…</span><button id="history">展开全部历史</button><button id="sync">同步 DSH 原会话</button><button class="danger" id="stop">停止当前回合</button></div><div class="history-search"><label for="historyQuery">查找历史</label><input id="historyQuery" type="search" maxlength="120" placeholder="输入关键词，搜索全部记录" autocomplete="off"><select id="speakerFilter" aria-label="按发言人筛选"><option value="all">所有人</option><option value="human">你</option><option value="ds">DS</option><option value="codex">Codex</option><option value="system">工作间</option></select><button id="clearSearch" type="button">清除</button><span id="searchCount" class="count" role="status" aria-live="polite"></span></div><div id="messages" aria-live="polite"></div><div id="runStatus" class="run-status" data-kind="connecting" data-live="false"><span class="run-mark" aria-hidden="true"></span><div><div id="runTitle" class="run-title" role="status" aria-live="polite">正在连接工作间</div><div id="runDetail" class="run-detail"></div><div id="runElapsed" class="run-elapsed" role="timer" aria-live="off"></div></div></div><div class="composer"><textarea id="input" aria-label="工作间消息" placeholder="在这里告诉 DS 和 Codex 要讨论或完成什么。两边的发言都会保留。"></textarea><div id="pendingFiles" aria-label="随下一条消息发送的附件"></div><div class="actions"><select id="target" aria-label="发给谁"><option value="both">讨论一轮：DS → Codex</option><option value="ds">只请 DS 回答</option><option value="codex">只请 Codex 回答</option></select><button class="primary" id="send">发送</button><button id="redirect">改方向并发送</button><button id="upload">上传文件</button><input id="filePicker" type="file" multiple hidden aria-label="选择要上传的文件"><span class="note">Ctrl + Enter 发送</span></div><p class="note upload-note">每个文件最多 25 MB。上传保存在本机；随消息发送时才将可提取文字交给所选成员。图片及无法提取文字的文件仅保存，不会被视觉读取。</p><div id="uploadStatus" class="note" role="status" aria-live="polite"></div><div id="feedback" role="status"></div></div></section><aside><h2>共同记忆 <span class="badge" id="revision"></span></h2><p class="note">这里是人类已确认的目标与约束。模型的建议保留在发言里；你可用消息上的“记为共同约束”确认或替换条目。</p><ol id="decisions"></ol><h2>成员</h2><p id="members"></p><label class="note" for="model">DS 模型</label><div><select id="model" aria-label="DS 模型"></select><button id="changeModel">切换</button></div><details><summary>会话与已读记录</summary><pre id="sessionInfo"></pre></details><p class="note">已读标记证明程序发出了哪些记录并收到匹配回执，不能保证模型每次都理解正确。可随时指出遗漏。</p><p class="note">Codex 当前通过结构化回复交付内容；原生终端执行能力仍另行处理。历史中已作废的建议不会自动变成共同决定。</p></aside></main><dialog id="pinDialog"><h2>确认共同约束</h2><p class="note">确认后，下一轮 DS 和 Codex 都会收到更新的共同记忆。</p><textarea id="pinText" aria-label="共同约束内容"></textarea><p><label for="replace">保存方式：</label><select id="replace"><option value="">新增一条</option></select></p><div class="actions"><button class="primary" id="confirmPin">确认保存</button><button id="cancelPin">取消</button></div></dialog><dialog id="filesDialog" class="file-dialog" aria-labelledby="filesTitle"><div class="dialog-heading"><h2 id="filesTitle">文件区</h2><button id="closeFiles" class="file-close" aria-label="关闭文件区">关闭</button></div><p class="note">上传材料和生成成果都保存在这台电脑。点击“引用”后，文件会附在你的下一条消息中；下载按钮可取回原文件。</p><div class="actions"><button id="uploadInFiles">上传文件（可多选）</button><button id="refreshFiles">刷新文件列表</button><span class="note">每个文件最多 25 MB</span></div><div id="filesFeedback" class="note" role="status"></div><h3>上传的材料</h3><div id="uploadsList" class="file-list"></div><h3>生成的成果</h3><div id="outputsList" class="file-list"></div></dialog><script src="/status-view.js"></script><script>
+const $=id=>document.getElementById(id);let state=null,lastSignature='',showAll=false,pinMessage=null,models=[],sending=false,uploading=0,fileCatalog={uploads:[],outputs:[]};const pendingFiles=new Map(),MAX_FILE_BYTES=25*1024*1024;
+let collapsedRoom=null,collapsedMessages=new Set(),activeQuery='',lastSearchKey=null,searchTimer=null;
+function collapseKey(roomId){return 'workroom:collapsed:'+roomId;}
+function loadCollapsed(roomId){
+  if(collapsedRoom===roomId)return;
+  collapsedRoom=roomId;collapsedMessages=new Set();
+  try{const ids=JSON.parse(localStorage.getItem(collapseKey(roomId))||'[]');if(Array.isArray(ids))collapsedMessages=new Set(ids.filter(id=>typeof id==='string'));}catch{}
+}
+function saveCollapsed(){try{localStorage.setItem(collapseKey(collapsedRoom),JSON.stringify([...collapsedMessages]));}catch{}}
+function setMessageCollapsed(card,body,button,message,collapsed){
+  card.classList.toggle('collapsed',collapsed);
+  body.replaceChildren();
+  if(collapsed){const full=message.text.replace(/\s+/g,' ').trim(),match=activeQuery?full.toLocaleLowerCase().indexOf(activeQuery.toLocaleLowerCase()):-1,start=match>65?match-55:0;const preview=(start?'…':'')+full.slice(start,start+240)+(start+240<full.length?'…':'');appendHighlighted(body,preview,activeQuery);}
+  else linkedBody(body,message.text,activeQuery);
+  button.textContent=collapsed?'展开':'收起';button.setAttribute('aria-expanded',String(!collapsed));
+  button.setAttribute('aria-label',(collapsed?'展开':'收起')+'第 '+message.seq+' 条发言');
+}
+async function api(url,body){const r=await fetch(url,{method:body===undefined?'GET':'POST',headers:{'Content-Type':'application/json'},body:body===undefined?undefined:JSON.stringify(body),signal:AbortSignal.timeout(body===undefined?8000:30000)});const x=await r.json();if(!r.ok){const e=Error(x.error);e.rejected=true;throw e;}return x;}
+const connection={lastSeenAt:0,error:null,offset:0,accepted:null};let pendingDelivery=null,updating=false;
+const names={human:'你',ds:'DS',codex:'Codex',codex_legacy:'Codex（旧流程交接）',system:'工作间'};
+function appendHighlighted(element,text,query){if(!query){element.append(document.createTextNode(text));return;}const source=text.toLocaleLowerCase(),needle=query.toLocaleLowerCase();let cursor=0,count=0,at;while(count<40&&(at=source.indexOf(needle,cursor))>=0){element.append(document.createTextNode(text.slice(cursor,at)));const mark=document.createElement('mark');mark.textContent=text.slice(at,at+query.length);element.append(mark);cursor=at+query.length;count++;}element.append(document.createTextNode(text.slice(cursor)));}
+function linkedBody(element,text,query=''){const pattern=/https?:\/\/[^\s<>"']+/gi;let cursor=0;for(const match of text.matchAll(pattern)){const url=match[0].replace(/[\]),.;，。；]+$/g,'');appendHighlighted(element,text.slice(cursor,match.index),query);const a=document.createElement('a');a.href=url;a.textContent=url;a.target='_blank';a.rel='noopener noreferrer';element.append(a);cursor=match.index+url.length;}appendHighlighted(element,text.slice(cursor),query);}
+function updateControls(){
+  $('send').disabled=sending||uploading>0||!!state?.active||!!state?.blockedOperation;$('send').textContent=pendingDelivery?.uncertain?'重试原消息':sending?'正在发送…':'发送';
+  $('redirect').disabled=sending||uploading>0||!!pendingDelivery||!!state?.blockedOperation;
+  $('upload').disabled=uploading>0;$('uploadInFiles').disabled=uploading>0;$('filePicker').disabled=uploading>0;
+  for(const button of $('pendingFiles').querySelectorAll('button'))button.disabled=sending;
+}
+function fileSize(bytes){const n=Number(bytes)||0;return n>=1024*1024?(n/(1024*1024)).toFixed(1)+' MB':n>=1024?(n/1024).toFixed(1)+' KB':n+' B';}
+function extractionLabel(file){const e=file.extraction||{};if(e.status==='ready')return '已提取文字 · '+(Number(e.chars)||0).toLocaleString('zh-CN')+' 字符';if(e.status==='partial')return '部分文字可用 · '+(Number(e.chars)||0).toLocaleString('zh-CN')+' 字符';return '已保存原文件 · 暂无可读文字';}
+function downloadLink(file,label='下载原文件'){
+  if(!file.downloadUrl)return null;let url;try{url=new URL(file.downloadUrl,location.href);}catch{return null;}
+  if(url.origin!==location.origin||!['http:','https:'].includes(url.protocol))return null;
+  const a=document.createElement('a');a.textContent=label;a.href=url.href;a.download=file.name||'';return a;
+}
+function renderPending(){
+  $('pendingFiles').replaceChildren();
+  for(const file of pendingFiles.values()){
+    const chip=document.createElement('div');chip.className='file-chip';const label=document.createElement('span');label.textContent=file.name+' · '+extractionLabel(file);
+    const remove=document.createElement('button');remove.type='button';remove.textContent='移除';remove.setAttribute('aria-label','不随消息发送 '+file.name);remove.onclick=()=>{pendingFiles.delete(file.id);renderPending();renderFiles();};chip.append(label,remove);$('pendingFiles').append(chip);
+  }
+  updateControls();
+}
+function selectFile(file){pendingFiles.set(file.id,file);renderPending();renderFiles();$('filesFeedback').textContent='已选中“'+file.name+'”，发送下一条消息时才会交给成员。';}
+function renderFiles(){
+  for(const kind of ['uploads','outputs']){
+    const list=$(kind+'List');list.replaceChildren();const files=fileCatalog[kind]||[];
+    if(!files.length){const empty=document.createElement('div');empty.className='file-empty';empty.textContent=kind==='uploads'?'还没有上传材料。可以选择文件上传，再随消息发送。':'还没有可下载的生成成果。';list.append(empty);continue;}
+    for(const file of files){
+      const row=document.createElement('article');row.className='file-row';const title=document.createElement('div');title.className='file-name';title.textContent=file.name;row.append(title);
+      const meta=document.createElement('div');meta.className='file-detail';const date=file.createdAt?new Date(file.createdAt).toLocaleString('zh-CN'):'';meta.textContent=[fileSize(file.bytes),date,kind==='outputs'?(names[file.speaker]||file.speaker||'工作间'):null].filter(Boolean).join(' · ');row.append(meta);
+      if(kind==='uploads'){const status=document.createElement('div');status.className='file-detail'+(file.extraction?.status!=='ready'?' file-warning':'');status.textContent=extractionLabel(file)+(file.extraction?.note?'。'+file.extraction.note:'');row.append(status);}
+      const actions=document.createElement('div');actions.className='file-actions';const a=downloadLink(file,kind==='uploads'?'下载原文件':'下载成果');if(a)actions.append(a);
+      if(kind==='uploads'){const quote=document.createElement('button');quote.textContent=pendingFiles.has(file.id)?'已选入下一条消息':'引用';quote.disabled=pendingFiles.has(file.id);quote.setAttribute('aria-label','引用 '+file.name);quote.onclick=()=>selectFile(file);actions.append(quote);}
+      row.append(actions);list.append(row);
+    }
+  }
+}
+async function refreshFiles(){try{fileCatalog=await api('/files');renderFiles();}catch(e){$('filesFeedback').textContent='文件列表读取失败：'+e.message;}}
+async function uploadFiles(files){
+  if(!files.length||uploading)return;uploading++;updateControls();let completed=0;const errors=[];
+  try{
+    for(let i=0;i<files.length;i++){
+      const file=files[i];if(file.size>MAX_FILE_BYTES){errors.push(file.name+'：超过 25 MB');continue;}
+      const progress='正在上传 '+(i+1)+' / '+files.length+'：'+file.name;$('uploadStatus').textContent=progress;$('filesFeedback').textContent=progress;
+      try{const r=await fetch('/files/upload?name='+encodeURIComponent(file.name),{method:'POST',headers:{'Content-Type':'application/octet-stream'},body:file});const result=await r.json();if(!r.ok)throw Error(result.error||'上传失败');pendingFiles.set(result.id,result);completed++;renderPending();}catch(e){errors.push(file.name+'：'+e.message);}
+    }
+    await refreshFiles();const summary=(completed?'已上传 '+completed+' 个文件，已选入下一条消息。':'')+(errors.length?' '+errors.join('；'):'');$('uploadStatus').textContent=summary.trim();$('filesFeedback').textContent=summary.trim();
+  }finally{uploading--;updateControls();}
+}
+$('openFiles').onclick=()=>{$('filesDialog').showModal();$('filesFeedback').textContent='正在读取文件列表…';refreshFiles().then(()=>{if($('filesFeedback').textContent==='正在读取文件列表…')$('filesFeedback').textContent='';});};
+$('closeFiles').onclick=()=>$('filesDialog').close();$('refreshFiles').onclick=()=>{$('filesFeedback').textContent='';refreshFiles();};
+$('upload').onclick=$('uploadInFiles').onclick=()=>$('filePicker').click();$('filePicker').onchange=()=>{const files=Array.from($('filePicker').files||[]);$('filePicker').value='';uploadFiles(files);};
+function openPin(m){pinMessage=m;$('pinText').value=m.text;$('replace').replaceChildren(new Option('新增一条',''));for(const d of state.decisions.filter(d=>!d.supersededBy))$('replace').add(new Option('替换：'+d.text.slice(0,40),d.id));$('pinDialog').showModal();}
+function render(s){
+  state=s;loadCollapsed(s.roomId);$('roomName').textContent='共同记录 '+s.messages.length+' 条';$('revision').textContent='v'+s.revision;
+  if(connection.accepted&&s.operations.some(o=>o.id===connection.accepted.id))connection.accepted=null;
+  if(pendingDelivery){const delivered=s.operations.find(o=>o.clientId===pendingDelivery.body.clientId);if(delivered)confirmDelivery(delivered,pendingDelivery);}
+  renderStatus();
+  $('stop').disabled=!s.active&&!s.blockedOperation;$('stop').textContent=s.blockedOperation?'核对停止状态':s.activeTransport==='desktop-app-tools'?'请求 Codex 停止':'停止当前回合';$('stop').title=s.activeTransport==='desktop-app-tools'?'向桌面会话请求停止；要立即中断，请点 Codex 软件里的停止按钮':'';$('changeModel').disabled=!!s.active||!!s.blockedOperation;updateControls();
+  if(s.syncError)$('feedback').textContent='DSH 同步暂不可用：'+s.syncError;
+  else if($('feedback').textContent.startsWith('DSH 同步暂不可用：'))$('feedback').textContent='DSH 连接已恢复';
+  const query=$('historyQuery').value.trim(),speaker=$('speakerFilter').value,searchActive=!!query||speaker!=='all',searchKey=JSON.stringify([query,speaker]);activeQuery=query;
+  const filtered=searchActive?s.messages.filter(m=>(speaker==='all'||(speaker==='codex'?['codex','codex_legacy'].includes(m.speaker):m.speaker===speaker))&&(!query||m.text.toLocaleLowerCase().includes(query.toLocaleLowerCase()))):null;
+  $('history').disabled=searchActive;$('clearSearch').disabled=!searchActive;$('searchCount').textContent=searchActive?`找到 ${filtered.length} 条 · 共 ${s.messages.length} 条`:`显示最近 ${Math.min(s.messages.length,22)} 条 · 共 ${s.messages.length} 条`;
+  const sig=JSON.stringify([s.messages.length,s.revision,showAll,s.active,s.blockedOperation,s.operations.at(-1)?.status,searchKey]);if(sig!==lastSignature){
+    const container=$('messages'),nearBottom=container.scrollHeight-container.scrollTop-container.clientHeight<80,searchChanged=lastSearchKey!==searchKey;container.replaceChildren();
+    const visible=searchActive?filtered:showAll?s.messages:s.messages.slice(-22);
+    if(searchActive&&!visible.length){const empty=document.createElement('div');empty.className='search-empty';empty.textContent='没有找到符合条件的发言';container.append(empty);}
+    for(const m of visible){
+      const card=document.createElement('article');card.className='message '+m.speaker;card.dataset.seq=m.seq;
+      const meta=document.createElement('div');meta.className='meta';const n=document.createElement('span');n.className='name';n.textContent=names[m.speaker]||m.speaker;meta.append(n);
+      const t=document.createElement('span');t.textContent='#'+m.seq+' · '+new Date(m.at).toLocaleString('zh-CN');meta.append(t);
+      const timing=s.operations.find(o=>o.id===m.operationId)?.members?.[m.speaker];if(timing?.finishedAt){const elapsed=document.createElement('span');elapsed.textContent='本轮耗时 '+RoomStatus.duration(timing.startedAt,timing.finishedAt);meta.append(elapsed);}
+      if(m.ack){const a=document.createElement('span');a.className='ack';a.textContent='已读至 #'+m.ack.seen_seq+' · 约束 v'+m.ack.memory_revision;meta.append(a);}else if(m.imported){const a=document.createElement('span');a.textContent='从原会话导入';meta.append(a);}
+      const canCollapse=m.text.length>180||!!m.attachments?.length||!!m.files?.length||!!m.sources?.length||!!m.tools?.length;
+      let collapseButton=null;
+      if(canCollapse){collapseButton=document.createElement('button');collapseButton.type='button';collapseButton.className='collapse-toggle';meta.append(collapseButton);}
+      if(m.speaker==='human'){const b=document.createElement('button');b.className='pin';b.textContent='记为共同约束';b.onclick=()=>openPin(m);meta.append(b);}
+      const body=document.createElement('div');body.className='body';body.id='message-body-'+m.seq;card.append(meta,body);
+      if(collapseButton){collapseButton.setAttribute('aria-controls',body.id);setMessageCollapsed(card,body,collapseButton,m,collapsedMessages.has(m.id));collapseButton.onclick=()=>{const collapsed=!card.classList.contains('collapsed');if(collapsed)collapsedMessages.add(m.id);else collapsedMessages.delete(m.id);saveCollapsed();setMessageCollapsed(card,body,collapseButton,m,collapsed);};}
+      else linkedBody(body,m.text,activeQuery);
+      if(m.speaker==='system'){
+        const failed=s.operations.find(o=>o.id===m.operationId&&['failed','interrupted'].includes(o.status)),latestHuman=s.messages.findLast(x=>x.speaker==='human');
+        if(failed&&failed.humanSeq===latestHuman?.seq&&!s.operations.some(o=>o.humanSeq===failed.humanSeq&&o.status==='completed')){
+          const retry=document.createElement('button');retry.className='message-detail';retry.textContent='恢复未回复的成员';retry.disabled=!!s.active||!!s.blockedOperation;retry.onclick=async()=>{retry.disabled=true;try{await api('/retry',{operationId:failed.id,clientId:crypto.randomUUID()});$('feedback').textContent='正在核对原请求与回复，已有回答保留';await update();}catch(e){$('feedback').textContent=e.message;retry.disabled=!!state?.active||!!state?.blockedOperation;}};card.append(retry);
+        }
+      }
+      for(const f of m.attachments||[]){const p=document.createElement('p');p.className='message-attachment message-detail';const label=document.createElement('span');label.textContent='附件：'+f.name+' · '+extractionLabel(f)+' ';p.append(label);const a=downloadLink(f);if(a)p.append(a);card.append(p);}
+      for(const f of m.files||[]){const p=document.createElement('p'),a=document.createElement('a');p.className='message-detail';a.textContent='下载 '+f.path;a.href='/download?op='+encodeURIComponent(m.operationId)+'&path='+encodeURIComponent(f.path);p.append(a);card.append(p);}
+      if(m.sources?.length){const details=document.createElement('details'),summary=document.createElement('summary');details.className='message-detail';summary.textContent='本轮读取的链接与文件（'+m.sources.length+'）';details.append(summary);for(const source of m.sources){const p=document.createElement('p'),a=document.createElement('a');a.textContent=source.title||source.url;a.href=source.url;a.target='_blank';a.rel='noreferrer noopener';p.append(a,document.createTextNode(' · '+(source.status==='ready'?'文字已读取':source.status==='partial'?'部分文字已读取':'未读到正文')+' · '+source.chars+'字符；'+source.note));details.append(p);}card.append(details);}
+      if(m.tools?.length){const details=document.createElement('details'),summary=document.createElement('summary');details.className='message-detail';summary.textContent='实际工具调用（'+m.tools.length+'）';details.append(summary);for(const tool of m.tools){const p=document.createElement('p');p.textContent=(/web|search/i.test(tool.name)?'网页检索与打开':tool.name)+' · '+tool.status;details.append(p);}card.append(details);}
+      container.append(card);
+    }
+    if(searchChanged&&searchActive)container.scrollTop=0;else if(nearBottom||!lastSignature)container.scrollTop=container.scrollHeight;lastSignature=sig;lastSearchKey=searchKey;
+    $('decisions').replaceChildren();for(const d of s.decisions.filter(d=>!d.supersededBy)){const li=document.createElement('li');li.textContent=d.text;$('decisions').append(li);}if($('filesDialog').open)refreshFiles();
+  }
+  $('members').textContent='DS：沿用原 DSH 会话\nCodex：'+(s.codex.threadId?'固定会话已建立':'首轮回复后固定会话');$('members').style.whiteSpace='pre-wrap';
+  $('sessionInfo').textContent=JSON.stringify({DS:s.dshSessionId,Codex:s.codex.threadId,Codex已读:s.codex.seenSeq,DS已读:s.ds.seenSeq,DSH原会话同步至:s.ds.sourceSeq,当前回合:s.active},null,2);
+}
+function renderStatus(){
+  const view=RoomStatus.describe(state,{...connection,pending:pendingDelivery});
+  $('runStatus').dataset.kind=view.kind;$('runStatus').dataset.live=String(view.live);
+  for(const [id,text] of [['status',view.link],['runTitle',view.title],['runDetail',view.detail],['runElapsed',view.elapsed]])if($(id).textContent!==text)$(id).textContent=text;
+}
+function confirmDelivery(operation,pending){
+  if(pendingDelivery!==pending)return;connection.accepted=operation;pendingDelivery=null;
+  if($('input').value===pending.inputValue)$('input').value='';
+  for(const id of pending.body.attachmentIds)pendingFiles.delete(id);renderPending();renderFiles();
+  $('feedback').textContent='工作间已确认收到，AI 状态和等待时间显示在上方';
+}
+let updateAgain=false;
+async function update(){if(updating){updateAgain=true;return;}updating=true;try{const s=await api('/state');connection.lastSeenAt=Date.now();connection.error=null;connection.offset=s.serverTime?Date.parse(s.serverTime)-Date.now():0;render(s);}catch(e){connection.error=e.message;renderStatus();}finally{updating=false;if(updateAgain){updateAgain=false;queueMicrotask(update);}}}
+
+async function send(interrupt=false){
+  if(sending||uploading||(!interrupt&&state?.active))return;
+  let pending=pendingDelivery;
+  if(!pending){const inputValue=$('input').value,attachmentIds=Array.from(pendingFiles.keys()),text=inputValue.trim()||(attachmentIds.length?'请阅读本条消息附带的材料。':'');if(!text)return;
+    pending={inputValue,startedAt:Date.now(),uncertain:false,body:{text,target:$('target').value,clientId:crypto.randomUUID(),interrupt,attachmentIds}};pendingDelivery=pending;}
+  pending.uncertain=false;sending=true;updateControls();renderStatus();
+  try{const operation=await api('/message',pending.body);confirmDelivery(operation,pending);await update();}catch(e){
+    if(e.rejected){if(pendingDelivery===pending)pendingDelivery=null;$('feedback').textContent=e.message;}
+    else {if(pendingDelivery===pending)pending.uncertain=true;$('feedback').textContent=pendingDelivery?'暂未确认是否送达。输入已保留；恢复连接后会自动核对，或点“重试原消息”。':'工作间已确认接收，正在核对最新状态。';}
+  }finally{sending=false;updateControls();renderStatus();}
+}
+$('send').onclick=()=>send();$('redirect').onclick=()=>send(true);$('input').addEventListener('keydown',e=>{if(e.ctrlKey&&e.key==='Enter'){e.preventDefault();send();}});
+$('stop').onclick=async()=>{try{const r=await api('/stop',{reason:'人类点击停止'});$('feedback').textContent=r.confirmed?'已确认停止，固定会话和历史保留':'已请求停止，等待后端确认；也可在原会话点击停止';update();}catch(e){$('feedback').textContent=e.message;}};
+$('sync').onclick=async()=>{try{await api('/sync',{});$('feedback').textContent='原 DSH 会话已同步';update();}catch(e){$('feedback').textContent=e.message;}};
+$('history').onclick=()=>{showAll=!showAll;$('history').textContent=showAll?'只看最近消息':'展开全部历史';lastSignature='';render(state);};
+function refreshHistorySearch(){if(!state)return;lastSignature='';render(state);}
+$('historyQuery').addEventListener('input',()=>{clearTimeout(searchTimer);searchTimer=setTimeout(refreshHistorySearch,150);});
+$('speakerFilter').addEventListener('change',()=>{clearTimeout(searchTimer);refreshHistorySearch();});
+$('clearSearch').onclick=()=>{$('historyQuery').value='';$('speakerFilter').value='all';clearTimeout(searchTimer);refreshHistorySearch();$('historyQuery').focus();};
+window.addEventListener('storage',e=>{if(collapsedRoom&&e.key===collapseKey(collapsedRoom)){collapsedRoom=null;loadCollapsed(state.roomId);lastSignature='';render(state);}});
+$('cancelPin').onclick=()=>$('pinDialog').close();$('confirmPin').onclick=async()=>{try{await api('/decision',{text:$('pinText').value,sourceMessageId:pinMessage.id,revision:state.revision,replaceId:$('replace').value||null});$('pinDialog').close();lastSignature='';update();}catch(e){$('feedback').textContent=e.message;$('pinDialog').close();}};
+async function getModels(){try{const c=await api('/models');models=[];for(const g of c.groups||[])for(const m of g.models||[])models.push({provider:g.id,id:m.id,label:m.label||m.name||m.id});$('model').replaceChildren();for(const m of models)$('model').add(new Option(m.label,m.provider+'|'+m.id));}catch(e){$('model').add(new Option('DSH 未连接',''));}}
+$('changeModel').onclick=async()=>{const [provider,model]=$('model').value.split('|');if(!model)return;try{await api('/model',{provider,model});$('feedback').textContent='DS 模型已切换，下轮生效';}catch(e){$('feedback').textContent=e.message;}};
+// SSE announces coordinator changes. /state remains the authoritative snapshot.
+// Polling is retained for browsers/proxies that cannot maintain the event stream.
+let events=null,eventConnected=false;
+if(typeof EventSource!=='undefined'){events=new EventSource('/events');events.onopen=()=>{eventConnected=true;update();};events.addEventListener('state',update);events.addEventListener('reset',update);events.onerror=()=>{eventConnected=false;};}
+window.addEventListener('pagehide',()=>events?.close());
+window.addEventListener('pageshow',e=>{if(e.persisted)location.reload();});
+update();getModels();setInterval(()=>{if(!eventConnected||Date.now()-connection.lastSeenAt>4000)update();},1800);setInterval(renderStatus,1000);
+</script></body></html>

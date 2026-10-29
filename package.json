@@ -1,0 +1,14 @@
+{
+  "name": "three-party-workroom",
+  "version": "0.1.0",
+  "private": true,
+  "description": "A local workroom for a human, DeepSeek Harness, and Codex",
+  "scripts": {
+    "setup": "node setup.cjs",
+    "start": "node hub.cjs serve",
+    "test": "node --test test/communication.test.cjs"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
